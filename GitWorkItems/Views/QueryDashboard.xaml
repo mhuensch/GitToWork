@@ -4,9 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignWidth="300">
+             d:DesignWidth="300"
+						 Name="Mine">
 
-	<Grid>
+
+
+	<!--<Grid>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"></ColumnDefinition>
 			<ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -19,7 +22,7 @@
 		<Label Content="{Binding Path=Title, FallbackValue='[Title of Dashboard]'}" FontSize="12" Grid.Column="0" Grid.Row="0" />
 		<Label Content="{Binding Path=UnreadCount, FallbackValue='[1 Unread]'}" FontSize="12" Grid.Column="0" Grid.Row="1"/>
 		<Label Content="{Binding Path=Count, FallbackValue='[0]'}" FontSize="43" Margin="0, -12, 0, 0" FontWeight="Bold"  Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" />
-	</Grid>
+	</Grid>-->
 	
 	<!--<StackPanel Orientation="Horizontal">
 		<StackPanel Orientation="Vertical">

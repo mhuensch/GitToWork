@@ -22,18 +22,12 @@
 
 		<StackPanel>
 			<Label FontSize="18">Dashboards</Label>
-			<ListBox ItemsSource="{Binding Dashboards}" BorderBrush="Transparent">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<view:QueryDashboard/>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-				<ListBox.ItemContainerStyle>
-					<Style TargetType="ListBoxItem">
-						<EventSetter Event="MouseDoubleClick" Handler="OnQuerySelected"/>
-					</Style>
-				</ListBox.ItemContainerStyle>
-			</ListBox>
+			<DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Dashboards}" SelectionMode="Extended" SelectionUnit="FullRow" 
+				CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" HeadersVisibility="None" BorderBrush="Transparent">
+				<DataGrid.Columns>
+					<DataGridTextColumn Binding="{Binding Title}" Header="Title" Width="*" IsReadOnly="True" />
+				</DataGrid.Columns>
+			</DataGrid>
 			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" Visibility="{Binding MissingDashboards, Converter={StaticResource BooleanToVisibilityConverter}}" >
 				<Span Foreground="Black">No Dashboards Found.</Span>
 				<Hyperlink Name="AddQueryLink" NavigateUri="Add">Add</Hyperlink> a query to this dashboard to have them run automatically.
