@@ -16,7 +16,9 @@ namespace Run00.GitWorkItems.Controls
 {
 	public class GitControlProxy
 	{
-		public event EventHandler AccountInformationChanged;
+		public Account Account { get; private set; }
+
+		public INotifyPropertyChanged AccountNotifier { get { return (INotifyPropertyChanged)Account; } }
 
 		public GitControlProxy([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
 		{
@@ -29,23 +31,7 @@ namespace Run00.GitWorkItems.Controls
 					OnTeamExplorerManagerViewModelChanged(s, e);
 				}));
 
-			_account = new Account();
-			((INotifyPropertyChanged)_account).PropertyChanged += OnAccountInfromationChanged;
-		}
-
-		public bool IsConnected()
-		{
-			return
-				string.IsNullOrWhiteSpace(_account.AccountName) == false &&
-				string.IsNullOrWhiteSpace(_account.RepositoryName) == false;
-		}
-
-		private void OnAccountInfromationChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (AccountInformationChanged == null)
-				return;
-
-			AccountInformationChanged.Invoke(this, new EventArgs());
+			Account = new Account();
 		}
 
 		private void OnTeamExplorerManagerViewModelChanged(object sender, PropertyChangedEventArgs e)
@@ -72,15 +58,15 @@ namespace Run00.GitWorkItems.Controls
 
 		private void UpdateRepositoryInfo(object statusService)
 		{
-			_account.RepositoryPath = statusService.GetPropertyValue<string>("RepositoryPath");
-			_account.RepositoryUrl = null;
-			_account.AccountName = null;
-			_account.RepositoryName = null;
+			Account.RepositoryPath = statusService.GetPropertyValue<string>("RepositoryPath");
+			Account.RepositoryUrl = null;
+			Account.AccountName = null;
+			Account.RepositoryName = null;
 
-			if (string.IsNullOrWhiteSpace(_account.RepositoryPath))
+			if (string.IsNullOrWhiteSpace(Account.RepositoryPath))
 				return;
 
-			var filePath = Path.Combine(_account.RepositoryPath, @".git\config");
+			var filePath = Path.Combine(Account.RepositoryPath, @".git\config");
 			if (File.Exists(filePath) == false)
 				return;
 
@@ -95,11 +81,11 @@ namespace Run00.GitWorkItems.Controls
 			if (uri == null)
 				return;
 
-			_account.RepositoryUrl = uri;
+			Account.RepositoryUrl = uri;
 
 			var account = uri.AbsolutePath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-			_account.AccountName = account.First();
-			_account.RepositoryName = account.Skip(1).First();
+			Account.AccountName = account.First();
+			Account.RepositoryName = account.Skip(1).First();
 		}
 
 		private Dictionary<string, Dictionary<string, string>> ReadIni(string filePath)
@@ -134,8 +120,5 @@ namespace Run00.GitWorkItems.Controls
 
 			//InIFile["WindowSettings"]["Window Name"];
 		}
-
-		private readonly Account _account;
-
 	}
 }

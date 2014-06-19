@@ -13,7 +13,7 @@ namespace Run00.GitWorkItems
 		public const string ExplorerButtonId = "7D07DFF7-7B1C-4C0A-BF48-4A5DEC01BFB9";
 		public const string ExplorerPageId = "8C4F4A24-38C3-451C-A55F-9532EA61E841";
 
-		public const string QueryListPaneId = "D3EBF285-7320-487E-B1E8-546B34203306";
+		//public const string QueryListPaneId = "D3EBF285-7320-487E-B1E8-546B34203306";
 		public const string QueryResultsPaneId = "aa1dc5ae-24ea-440a-8268-a6dc65fcd4a0";
 		
 		public const string NewItemPaneId = "43ABEB10-ACD8-470B-83A8-7BB5518C350B";

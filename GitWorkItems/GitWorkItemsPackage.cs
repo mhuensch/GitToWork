@@ -35,12 +35,12 @@ namespace Run00.GitWorkItems
 	// This attribute is needed to let the shell know that this package exposes some menus.
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	// This attribute registers a tool window exposed by this package.
-	[ProvideToolWindow(typeof(QueryListPane))]
+	//[ProvideToolWindow(typeof(QueryListPane))]
 	[ProvideToolWindow(typeof(QueryResultsPane))]
 	[ProvideToolWindow(typeof(NewItemPane))]
 	[ProvideToolWindow(typeof(NewQueryPane))]
 	// Registering provider services to be located by this package.
-	[ProvideService(typeof(GitControlProxy))]	
+	[ProvideService(typeof(GitControlProxy))]
 	[Guid(GuidList.GitWorkItemsPkgStringId)]
 	public sealed class GitWorkItemsPackage : Package
 	{

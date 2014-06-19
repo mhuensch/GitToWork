@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.Shell.Interop;
+using Run00.GitWorkItems.Controls;
+using Run00.GitWorkItems.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,24 +19,24 @@ namespace Run00.GitWorkItems
 			return (T)serviceProvider.GetService(typeof(T));
 		}
 
-		public static void OpenNewTabWindow(this IServiceProvider serviceProvider, string guid, string title, bool forceNew = false)
+		public static void OpenNewTabWindow(this IServiceProvider serviceProvider, string controlGuid, IModel model)
 		{
 			var shell = serviceProvider.GetService<IVsUIShell>();
 
-			var guidNo = new Guid(guid);
-
-			//TODO: Register windows by id so that random and title hash codes are not needed
-			var id = uint.Parse((new Random()).Next().ToString());
-			if (forceNew == false)
-				id = uint.Parse(title.GetHashCode().ToString());
+			//NOTE: if the guid is empty, id will be 0 and a new window will be created
+			//if the guid is not empty, a new window will be created if one doesnt already exist
+			var id = (uint)model.GetHashCode();
+			var guid = Guid.Parse(controlGuid);
 
 			IVsWindowFrame winFrame;
-			if (shell.FindToolWindowEx(0x80000, ref guidNo, id, out winFrame) >= 0 && winFrame != null)
-			{
-				winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_MdiChild);
-				winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_Caption, title);
-				winFrame.Show();
-			}
+			if (shell.FindToolWindowEx(0x80000, ref guid, id, out winFrame) < 0 || winFrame == null)
+				return;
+
+			winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_MdiChild);
+			winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_Caption, model.Title);
+
+			winFrame.Show();
 		}
+
 	}
 }

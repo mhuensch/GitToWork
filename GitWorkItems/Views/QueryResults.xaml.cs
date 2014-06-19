@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Run00.GitWorkItems.Views
 {
 	/// <summary>
-	/// Interaction logic for QueryList.xaml
+	/// Interaction logic for WorkItemList.xaml
 	/// </summary>
-	public partial class QueryList : UserControl
+	public partial class QueryResults : UserControl
 	{
-		public QueryList()
+		public QueryResults()
 		{
 			InitializeComponent();
 		}

@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Linq;
 using Microsoft.VisualStudio.Shell.Interop;
 using Run00.GitWorkItems.Views;
+using Run00.GitWorkItems.Models;
+using System.ComponentModel;
 
 namespace Run00.GitWorkItems.Controls
 {
@@ -23,6 +25,10 @@ namespace Run00.GitWorkItems.Controls
 	[Guid(GuidList.QueryResultsPaneId)]
 	public class QueryResultsPane : ToolWindowPane
 	{
+		//public Query Query { get; private set; }
+
+		//public INotifyPropertyChanged QueryNotifier { get { return (INotifyPropertyChanged)Query; } }
+
 		/// <summary>
 		/// Standard constructor for the tool window.
 		/// </summary>
@@ -30,6 +36,7 @@ namespace Run00.GitWorkItems.Controls
 		{
 			// Set the window title reading it from the resources.
 			this.Caption = Resources.ToolWindowTitle;
+
 			// Set the image that will appear on the tab of the window frame
 			// when docked with an other window
 			// The resource ID correspond to the one defined in the resx file
@@ -41,62 +48,44 @@ namespace Run00.GitWorkItems.Controls
 			// This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
 			// we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on 
 			// the object returned by the Content property.
-			_view = new WorkItemList();
-			
-			var items = new List<object>() {
-				new { Title = "Title One", Closed = false},
-				new { Title = "Title Two", Closed = true},
-				new { Title = "Title Three", Closed = false}
-			};
-
-			foreach(var eachItem in items)
-			{
-				var itemView = new WorkItem();
-				itemView.Status.Source = "\uf12a".ToFontAwesomeIcon(Brushes.Red);
-				//itemView.Status.Source = "\uf00c".ToFontAwesomeIcon();
-
-				var checkbox = new CheckBox();
-
-				var listItem = new ListBoxItem();
-				listItem.Selected += listItem_Selected;
-				listItem.MouseDoubleClick += listItem_MouseDoubleClick;
-
-				var panel = new StackPanel();
-				panel.Orientation = Orientation.Horizontal;
-				panel.Children.Add(checkbox);
-				panel.Children.Add(itemView);
-
-				listItem.Content = panel;
-				_view.WorkItems.Items.Add(listItem);
-
-			}
-			//view.Sample.Source = FontAwesome.GetIcon("\uf046");
-
-			
-			base.Content = _view;
-
+			_view = new QueryResults();
 			_preview = new WorkItemEditor();
+			base.Content = _view;
 		}
 
-		void listItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		protected override void Initialize()
 		{
-			((IServiceProvider)this).OpenNewTabWindow(GuidList.NewItemPaneId, "Editing");
+			base.Initialize();
+			var query = this.GetService<GitControlProxy>().Account.SelectedQuery;
+			((INotifyPropertyChanged)query).PropertyChanged += OnQueryChanged;
+			_view.DataContext = query;
 		}
 
-		void listItem_Selected(object sender, RoutedEventArgs e)
+		void OnQueryChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (_view.Preview.Children.Count == 0)
-				return;
+			_view.InvalidateVisual();
+		}
 
-			var preivewContent = _view.Preview.Children[0] as WorkItemEditor;
-			if (preivewContent == null)
-			{
-				_view.Preview.Children.Clear();
-				_view.Preview.Children.Add(_preview);
-			}
+
+		private void listItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			((IServiceProvider)this).OpenNewTabWindow(GuidList.NewItemPaneId, new Models.WorkItem());
+		}
+
+		private void listItem_Selected(object sender, RoutedEventArgs e)
+		{
+			//if (_view.Preview.Children.Count == 0)
+			//	return;
+
+			//var preivewContent = _view.Preview.Children[0] as WorkItemEditor;
+			//if (preivewContent == null)
+			//{
+			//	_view.Preview.Children.Clear();
+			//	_view.Preview.Children.Add(_preview);
+			//}
 		}
 
 		private readonly WorkItemEditor _preview;
-		private readonly WorkItemList _view;
+		private readonly QueryResults _view;
 	}
 }

@@ -9,6 +9,8 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using Run00.GitWorkItems.Views;
 using Run00.GitWorkItems.Models;
+using System.Windows.Threading;
+using System.Threading;
 
 namespace Run00.GitWorkItems.Controls
 {
@@ -20,7 +22,7 @@ namespace Run00.GitWorkItems.Controls
 		public bool IsBusy { get; set; }
 
 		public string Title { get; set; }
-
+		 
 		public object PageContent { get; set; }
 
 		void ITeamExplorerPage.Initialize(object sender, PageInitializeEventArgs e)
@@ -28,29 +30,20 @@ namespace Run00.GitWorkItems.Controls
 			Title = "Work Items";
 
 			_serviceProvider = e.ServiceProvider;
-			_extensionProvider = _serviceProvider.GetService<Account>();
+			_gitProxy = _serviceProvider.GetService<GitControlProxy>();
+			_gitProxy.AccountNotifier.PropertyChanged += OnAccountInformationChanged;
 
-			//TODO: Remove this
-			_test = new Query() { Title = "one"};
+			_account = _gitProxy.Account;
 
 			_explorer = new Explorer();
-			_explorer.DataContext = _test;
-
+			_explorer.DataContext = _account;			
 			_explorer.NewQueryLink.RequestNavigate += OnNewItemQueryClicked;
 			_explorer.NewItemLink.RequestNavigate += OnNewWorkItemClicked;
 			_explorer.CreateQueryLink.RequestNavigate += OnCreateQueryClicked;
 			_explorer.AddQueryLink.RequestNavigate += OnAddQueryClicked;
 			_explorer.QuerySelected += OnQuerySelected;
 
-			var items = new List<object>()
-			{
-				new { Name = "test", Value="2"},
-				new { Name = "test", Value="3"},
-			};
-
 			PageContent = _explorer;
-
-			_explorer.DataContext = _extensionProvider;			
 		}
 
 		void ITeamExplorerPage.Cancel()
@@ -78,34 +71,41 @@ namespace Run00.GitWorkItems.Controls
 		{
 		}
 
+		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
+		{
+			switch(e.PropertyName)
+			{
+				case "SelectedQuery":
+					_serviceProvider.OpenNewTabWindow(GuidList.QueryResultsPaneId, _account.SelectedQuery);
+					break;
+				default:
+					return;
+			}
+		}
+
+		void AddItem(object item)
+		{
+			_account.SelectedQuery.WorkItems.Add(new Models.WorkItem() { Title = "Blaha" });
+		}
+
 		private void OnNewWorkItemClicked(object sender, EventArgs e)
 		{
-			_serviceProvider.OpenNewTabWindow(GuidList.NewItemPaneId, "New Work Item", true);
+			_serviceProvider.OpenNewTabWindow(GuidList.NewItemPaneId, new Models.WorkItem());
 		}
 
 		private void OnNewItemQueryClicked(object sender, EventArgs e)
 		{
-			_serviceProvider.OpenNewTabWindow(GuidList.NewQueryPaneId, "New Item Query", true);
+			_serviceProvider.OpenNewTabWindow(GuidList.NewQueryPaneId, new Models.Query());
 		}
 
 		private void OnCreateQueryClicked(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
 		{
-			_serviceProvider.OpenNewTabWindow(GuidList.NewQueryPaneId, "New Item Query", true);
+			_serviceProvider.OpenNewTabWindow(GuidList.NewQueryPaneId, new Models.Query());
 		}
 
 		private void OnAddQueryClicked(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
 		{
 			//throw new NotImplementedException();
-		}
-
-		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
-		{
-
-			var accountProvider = sender as GitControlProxy;
-			if (accountProvider == null)
-				return;
-
-			_test.Title = "two";
 		}
 
 		private void OnQuerySelected(object sender, EventArgs e)
@@ -114,31 +114,12 @@ namespace Run00.GitWorkItems.Controls
 			if (query == null)
 				return;
 
-			_extensionProvider.SelectedQuery = query;
+			_account.SelectedQuery = query;
 		}
 
-		//void OnSavedQueryDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-		//{
-		//	var dep = (DependencyObject)e.OriginalSource;
-		//	while ((dep != null) && !(dep is ListViewItem))
-		//	{
-		//		dep = VisualTreeHelper.GetParent(dep);
-		//	}
-
-		//	if (dep == null)
-		//		return;
-
-		//	var item = ((ListView)sender).ItemContainerGenerator.ItemFromContainer(dep);
-
-		//	_serviceProvider.OpenNewTabWindow(GuidList.QueryResultsPaneId, item.GetPropertyValue<string>("Name"));
-		//	//var item = (MyDataItemType)MyListView.ItemContainerGenerator.ItemFromContainer(dep);
-		//}
-
+		private Account _account;
 		private IServiceProvider _serviceProvider;
 		private Explorer _explorer;
-
-		//TODO: Remove this
-		private Query _test;
-		private Account _extensionProvider;
+		private GitControlProxy _gitProxy;
 	}
 }

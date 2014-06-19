@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Run00.GitWorkItems.Models
+namespace Run00.GitWorkItems.Models 
 {
 	[ImplementPropertyChanged]
-	public class Account
+	public class Account : IModel
 	{
+		public Guid Id { get; set; }
+
+		public string Title { get; set; }
+
 		public string RepositoryPath { get; set; }
 
 		public Uri RepositoryUrl { get; set; }
@@ -30,21 +34,29 @@ namespace Run00.GitWorkItems.Models
 
 		public bool MissingQueries { get { return Queries.Count() == 0; } }
 
+		public bool IsConnected()
+		{
+			return
+				string.IsNullOrWhiteSpace(AccountName) == false &&
+				string.IsNullOrWhiteSpace(RepositoryName) == false;
+		}
+
 		public Account()
 		{
 			Dashboards = new List<Query>() 
 			{
-				new Query { Title = "Dashboard One" },
-				new Query { Title = "Dashboard Two" },
-				new Query { Title = "Dashboard Three" }
+				new Query { Id = Guid.NewGuid(), Title = "Dashboard One", Total = 5, UnreadCount = 2, WorkItems = new List<WorkItem> { new WorkItem() { Title = "mine" } }},
+				new Query { Id = Guid.NewGuid(), Title = "Dashboard Two", Total = 5, UnreadCount = 2 },
+				new Query { Id = Guid.NewGuid(), Title = "Dashboard Three", Total = 5, UnreadCount = 2 }
 			};
 
 			Queries = new List<Query>() 
 			{
-				new Query { Title = "Query One" },
-				new Query { Title = "Query Two" },
-				new Query { Title = "Query Three" }
+				new Query { Id = Guid.NewGuid(), Title = "Query One", Total = 5, UnreadCount = 2 },
+				new Query { Id = Guid.NewGuid(), Title = "Query Two", Total = 5, UnreadCount = 2 },
+				new Query { Id = Guid.NewGuid(), Title = "Query Three", Total = 5, UnreadCount = 2 }
 			};
 		}
+
 	}
 }

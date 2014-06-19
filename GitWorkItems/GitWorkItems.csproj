@@ -143,6 +143,7 @@
     <Compile Include="Controls\QueryResultsPane.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Models\Account.cs" />
+    <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\WorkItem.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -162,17 +163,14 @@
     <Compile Include="Views\QueryEditor.xaml.cs">
       <DependentUpon>QueryEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\QueryList.xaml.cs">
-      <DependentUpon>QueryList.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\WorkItem.xaml.cs">
       <DependentUpon>WorkItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WorkItemEditor.xaml.cs">
       <DependentUpon>WorkItemEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\WorkItemList.xaml.cs">
-      <DependentUpon>WorkItemList.xaml</DependentUpon>
+    <Compile Include="Views\QueryResults.xaml.cs">
+      <DependentUpon>QueryResults.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NewItemPane.cs" />
   </ItemGroup>
@@ -223,10 +221,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\QueryList.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\WorkItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -235,7 +229,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\WorkItemList.xaml">
+    <Page Include="Views\QueryResults.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

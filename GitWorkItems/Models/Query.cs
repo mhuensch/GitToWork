@@ -8,22 +8,22 @@ using System.Threading.Tasks;
 namespace Run00.GitWorkItems.Models
 {
 	[ImplementPropertyChanged]
-	public class Query
+	public class Query : IModel
 	{
+		public Guid Id { get; set; }
+
 		public string Title { get; set; }
 		
-		public int Count { get; set; }
+		public int Total { get; set; }
 		
 		public int UnreadCount { get; set; }
 
-		public ICollection<WorkItem> WorkItems { get; set;}
+		public ICollection<WorkItem> WorkItems { get; set; }
 
 		public Query()
 		{
+			Title = "New Query";
 			WorkItems = new List<WorkItem>();
-			{
-				new WorkItem { Title = "WorkItem1", Unread = true };
-			}
 		}
 	}
 }

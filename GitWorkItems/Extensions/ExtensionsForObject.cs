@@ -10,16 +10,15 @@ namespace Run00.GitWorkItems
 	internal static class ExtensionsForObject
 	{
 		public static T GetPropertyValue<T>(this object obj, string name)
-			where T : class
 		{
 			if (obj == null)
-				return null;
+				return default(T);
 
 			var prop = obj.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			if (prop == null)
-				return null;
+				return default(T);
 
-			return prop.GetValue(obj) as T;
+			return (T)prop.GetValue(obj);
 		}
 
 		public static object AddEventHandler(this object obj, string name, Delegate function)

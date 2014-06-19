@@ -38,7 +38,7 @@ namespace Run00.GitWorkItems.Controls
 			if (gitProxy == null)
 				return;
 
-			gitProxy.AccountInformationChanged += OnGitProxyChanged;
+			gitProxy.AccountNotifier.PropertyChanged += OnAccountChanged;
 		}
 		
 		void ITeamExplorerNavigationItem.Execute()
@@ -58,13 +58,13 @@ namespace Run00.GitWorkItems.Controls
 		{
 		}
 
-		private void OnGitProxyChanged(object sender, EventArgs e)
+		private void OnAccountChanged(object sender, EventArgs e)
 		{
-			var gitProxy = sender as GitControlProxy;
-			if (gitProxy == null)
+			var account = sender as Account;
+			if (account == null)
 				return;
 
-			IsVisible = gitProxy.IsConnected();
+			IsVisible = account.IsConnected();
 		}
 
 		private readonly IServiceProvider _serviceProvider;

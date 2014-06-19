@@ -5,13 +5,20 @@ using System.Text;
 
 namespace Run00.GitWorkItems.Models
 {
-	public class WorkItem
+	public class WorkItem : IModel
 	{
+		public Guid Id { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
 		public string AssignedTo { get; set; }
 		public string Milestone { get; set; }
 		public ICollection<string> Tags { get; set; }
 		public bool Unread { get; set; }
+
+		public WorkItem()
+		{
+			Title = "New Work Item";
+			Tags = new List<string>();
+		}
 	}
 }
