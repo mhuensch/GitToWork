@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.TeamFoundation.Controls.WPF.TeamExplorer.Framework;
 using PropertyChanged;
 using System.IO;
-using Run00.GitWorkItems.Providers;
+using Run00.GitWorkItems.Models;
 
 namespace Run00.GitWorkItems.Controls
 {
@@ -20,11 +20,14 @@ namespace Run00.GitWorkItems.Controls
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 		
+
+
 		public bool IsVisible { get; set; }
 
 		public Image Image { get; set; }
 	
 		public string Text { get; set; }
+
 
 
 		[ImportingConstructor]
@@ -35,12 +38,15 @@ namespace Run00.GitWorkItems.Controls
 
 			_serviceProvider = serviceProvider;
 
-			var accountProvider = _serviceProvider.GetService<AccountProvider>() as INotifyPropertyChanged;
+			var accountProvider = _serviceProvider.GetService<GitControlProxy>() as INotifyPropertyChanged;
 			if (accountProvider == null)
 				return;
 
 			accountProvider.PropertyChanged += OnAccountInformationChanged;
 		}
+		
+
+
 
 		void ITeamExplorerNavigationItem.Execute()
 		{
@@ -58,10 +64,13 @@ namespace Run00.GitWorkItems.Controls
 		void IDisposable.Dispose()
 		{
 		}
+		
+
+
 
 		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
 		{
-			var accountProvider = sender as AccountProvider;
+			var accountProvider = sender as GitControlProxy;
 			if (accountProvider == null)
 				return;
 

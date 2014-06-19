@@ -1,4 +1,4 @@
-﻿using Run00.GitWorkItems.Providers;
+﻿using Run00.GitWorkItems.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

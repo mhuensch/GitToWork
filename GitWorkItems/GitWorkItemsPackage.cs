@@ -12,7 +12,7 @@ using Microsoft.TeamFoundation.Controls;
 using System.Windows;
 using System.ComponentModel;
 using Run00.GitWorkItems.Controls;
-using Run00.GitWorkItems.Providers;
+using Run00.GitWorkItems.Models;
 
 namespace Run00.GitWorkItems
 {
@@ -40,8 +40,8 @@ namespace Run00.GitWorkItems
 	[ProvideToolWindow(typeof(NewItemPane))]
 	[ProvideToolWindow(typeof(NewQueryPane))]
 	// Registering provider services to be located by this package.
-	[ProvideService(typeof(ExtensionProvider))]
-	[ProvideService(typeof(AccountProvider))]	
+	[ProvideService(typeof(Account))]
+	[ProvideService(typeof(GitControlProxy))]	
 	[Guid(GuidList.GitWorkItemsPkgStringId)]
 	public sealed class GitWorkItemsPackage : Package
 	{
@@ -57,50 +57,8 @@ namespace Run00.GitWorkItems
 			Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
 
 			var serviceContainer = (IServiceContainer)this;
-			serviceContainer.AddService(typeof(ExtensionProvider), new ServiceCreatorCallback((c, s) => { return new ExtensionProvider(this); }), true);
-			serviceContainer.AddService(typeof(AccountProvider), new ServiceCreatorCallback((c, s) => { return new AccountProvider(this); }), true);
-		}
-
-
-		/// <summary>
-		/// This function is called when the user clicks the menu item that shows the 
-		/// tool window. See the Initialize method to see how the menu item is associated to 
-		/// this function using the OleMenuCommandService service and the MenuCommand class.
-		/// </summary>
-		private void ShowToolWindow(object sender, EventArgs e)
-		{
-			// Get the instance number 0 of this tool window. This window is single instance so this instance
-			// is actually the only one.
-			// The last flag is set to true so that if the tool window does not exists it will be created.
-			var window = FindToolWindow(typeof(QueryResultsPane), 0, true);
-			if ((null == window) || (null == window.Frame))
-			{
-				throw new NotSupportedException(Resources.CanNotCreateWindow);
-			}
-
-			var windowFrame = (IVsWindowFrame)window.Frame;
-			ErrorHandler.ThrowOnFailure(windowFrame.Show());
-		}
-
-
-		/// <summary>
-		/// Initialization of the package; this method is called right after the package is sited, so this is the place
-		/// where you can put all the initialization code that rely on services provided by VisualStudio.
-		/// </summary>
-		protected override void Initialize()
-		{
-			Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-			base.Initialize();
-
-			// Add our command handlers for menu (commands must exist in the .vsct file)
-			//var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-			//if (null != mcs)
-			//{
-			//	// Create the command for the tool window
-			//	var toolwndCommandID = new CommandID(new Guid(GuidList.GitWorkItemsCmdSetStringId), (int)PkgCmdIDList.cmdidQueryWindow);
-			//	var menuToolWin = new MenuCommand(ShowToolWindow, toolwndCommandID);
-			//	mcs.AddCommand(menuToolWin);
-			//}
+			serviceContainer.AddService(typeof(Account), new ServiceCreatorCallback((c, s) => { return new Account(this); }), true);
+			serviceContainer.AddService(typeof(GitControlProxy), new ServiceCreatorCallback((c, s) => { return new GitControlProxy(this); }), true);
 		}
 	}
 }

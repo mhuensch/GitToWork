@@ -18,53 +18,81 @@
 			<Hyperlink Name="NewQueryLink" NavigateUri="New">New Item Query</Hyperlink>
 		</TextBlock>
 
-		<Separator Foreground="Gray" Margin="0, 5, 0, 0"/>
+		<Separator Foreground="Gray" Margin="0, 5, 0, 24"/>
 
-		<StackPanel>
+		<StackPanel Visibility="{Binding MissingDashboards, Converter={StaticResource BooleanToVisibilityConverter}}">
 			<Label FontSize="18">Dashboards</Label>
-			<ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Dashboards}" >
-				<ListBox.Resources>
-					<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#000000"/>
-				</ListBox.Resources>
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<view:QueryDashboard />
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" Visibility="{Binding MissingDashboards, Converter={StaticResource BooleanToVisibilityConverter}}" >
+			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" >
 				<Span Foreground="Black">No Dashboards Found.</Span>
 				<Hyperlink Name="AddQueryLink" NavigateUri="Add">Add</Hyperlink> a query to this dashboard to have them run automatically.
 			</TextBlock>
 		</StackPanel>
 
-		<Separator Foreground="Gray" Margin="0, 24, 0, 0"/>
+		<ListBox ItemsSource="{Binding Dashboards}" HorizontalContentAlignment="Stretch"  BorderBrush="Transparent">
+			<ListBox.Resources>
+				<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#000000"/>
+			</ListBox.Resources>
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<EventSetter Event="MouseDoubleClick" Handler="OnQuerySelected"/>
+				</Style>
+			</ListBox.ItemContainerStyle>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"></ColumnDefinition>
+							<ColumnDefinition Width="Auto"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition></RowDefinition>
+							<RowDefinition></RowDefinition>
+						</Grid.RowDefinitions>
+						<Grid.ContextMenu>
+							<ContextMenu Background="LightGray">
+								<MenuItem Header="Edit" Click="DeleteEvent" DataContext="{Binding}" />
+								<MenuItem Header="Remove" Click="DeleteEvent" DataContext="{Binding}" />
+							</ContextMenu>
+						</Grid.ContextMenu>
 
-		<StackPanel>
-			<Label FontSize="18">Queries</Label>
-			<ListBox ItemsSource="{Binding Queries}" BorderBrush="Transparent" >
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding Path=Title}" />
-							<StackPanel.ContextMenu>
-								<ContextMenu Background="LightGray">
-									<MenuItem Header="Add to Dashboard" Click="DeleteEvent" DataContext="{Binding}" />
-									<Separator />
-									<MenuItem Header="Edit" Click="DeleteEvent" DataContext="{Binding}" />
-									<MenuItem Header="Remove" Click="DeleteEvent" DataContext="{Binding}" />
-								</ContextMenu>
-							</StackPanel.ContextMenu>
+						<StackPanel Grid.Column="0" Grid.Row="0"  >
+							<Label Content="{Binding Title, FallbackValue='[Title of Dashboard]'}" FontSize="16" Padding="0" />
+							<Label Content="{Binding UnreadCount, FallbackValue='[1 Unread]'}" FontSize="12" Padding="0"/>
 						</StackPanel>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-				<ListBox.ItemContainerStyle>
-					<Style TargetType="ListBoxItem">
-						<EventSetter Event="MouseDoubleClick" Handler="OnQuerySelected"/>
-					</Style>
-				</ListBox.ItemContainerStyle>
-			</ListBox>
-			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" Visibility="{Binding MissingQueries, Converter={StaticResource BooleanToVisibilityConverter}}">
+						<Label Content="{Binding Count, FallbackValue='[99]'}" FontSize="30" FontWeight="Bold"  Grid.Column="1" Grid.Row="0" Padding="0" Margin="0,-5, 0, 0" />
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<Separator Foreground="Gray" Margin="0, 24, 0, 24"/>
+
+		<ListBox ItemsSource="{Binding Queries}" BorderBrush="Transparent" >
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<EventSetter Event="MouseDoubleClick" Handler="OnQuerySelected"/>
+				</Style>
+			</ListBox.ItemContainerStyle>			
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding Path=Title}" />
+						<StackPanel.ContextMenu>
+							<ContextMenu Background="LightGray">
+								<MenuItem Header="Add to Dashboard" Click="DeleteEvent" DataContext="{Binding}" />
+								<Separator />
+								<MenuItem Header="Edit" Click="DeleteEvent" DataContext="{Binding}" />
+								<MenuItem Header="Remove" Click="DeleteEvent" DataContext="{Binding}" />
+							</ContextMenu>
+						</StackPanel.ContextMenu>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+
+		<StackPanel  Visibility="{Binding MissingQueries, Converter={StaticResource BooleanToVisibilityConverter}}">
+			<Label FontSize="18">Queries</Label>
+			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" >
 				<Span Foreground="Black">No Queries Found.</Span>
 				<Hyperlink Name="CreateQueryLink" NavigateUri="Create">Create</Hyperlink> a query to search for work items.  These queries can be private or shared with other people on your team.
 			</TextBlock>

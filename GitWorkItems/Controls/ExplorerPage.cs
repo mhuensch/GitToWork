@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Controls;
 using Run00.GitWorkItems.Views;
-using Run00.GitWorkItems.Providers;
+using Run00.GitWorkItems.Models;
 
 namespace Run00.GitWorkItems.Controls
 {
@@ -28,7 +28,7 @@ namespace Run00.GitWorkItems.Controls
 			Title = "Work Items";
 
 			_serviceProvider = e.ServiceProvider;
-			_extensionProvider = _serviceProvider.GetService<ExtensionProvider>();
+			_extensionProvider = _serviceProvider.GetService<Account>();
 
 			//TODO: Remove this
 			_test = new Query() { Title = "one"};
@@ -101,7 +101,7 @@ namespace Run00.GitWorkItems.Controls
 		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
 		{
 
-			var accountProvider = sender as AccountProvider;
+			var accountProvider = sender as GitControlProxy;
 			if (accountProvider == null)
 				return;
 
@@ -114,7 +114,7 @@ namespace Run00.GitWorkItems.Controls
 			if (query == null)
 				return;
 
-			MessageBox.Show(query.Title);
+			_extensionProvider.SelectedQuery = query;
 		}
 
 		//void OnSavedQueryDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -139,6 +139,6 @@ namespace Run00.GitWorkItems.Controls
 
 		//TODO: Remove this
 		private Query _test;
-		private ExtensionProvider _extensionProvider;
+		private Account _extensionProvider;
 	}
 }
