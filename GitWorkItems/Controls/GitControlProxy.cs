@@ -1,6 +1,7 @@
 ﻿using Microsoft.TeamFoundation.Controls;
 using Microsoft.VisualStudio.Shell;
 using PropertyChanged;
+using Run00.GitWorkItems.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,16 +14,9 @@ using System.Threading.Tasks;
 
 namespace Run00.GitWorkItems.Controls
 {
-	[ImplementPropertyChanged]
 	public class GitControlProxy
 	{
-		public string RepositoryPath { get; set; }
-
-		public Uri RepositoryUrl { get; set; }
-
-		public string AccountName { get; set; }
-
-		public string RepositoryName { get; set; }
+		public event EventHandler AccountInformationChanged;
 
 		public GitControlProxy([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
 		{
@@ -34,6 +28,24 @@ namespace Run00.GitWorkItems.Controls
 				{
 					OnTeamExplorerManagerViewModelChanged(s, e);
 				}));
+
+			_account = new Account();
+			((INotifyPropertyChanged)_account).PropertyChanged += OnAccountInfromationChanged;
+		}
+
+		public bool IsConnected()
+		{
+			return
+				string.IsNullOrWhiteSpace(_account.AccountName) == false &&
+				string.IsNullOrWhiteSpace(_account.RepositoryName) == false;
+		}
+
+		private void OnAccountInfromationChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (AccountInformationChanged == null)
+				return;
+
+			AccountInformationChanged.Invoke(this, new EventArgs());
 		}
 
 		private void OnTeamExplorerManagerViewModelChanged(object sender, PropertyChangedEventArgs e)
@@ -60,15 +72,15 @@ namespace Run00.GitWorkItems.Controls
 
 		private void UpdateRepositoryInfo(object statusService)
 		{
-			RepositoryPath = statusService.GetPropertyValue<string>("RepositoryPath");
-			RepositoryUrl = null;
-			AccountName = null;
-			RepositoryName = null;
+			_account.RepositoryPath = statusService.GetPropertyValue<string>("RepositoryPath");
+			_account.RepositoryUrl = null;
+			_account.AccountName = null;
+			_account.RepositoryName = null;
 
-			if (string.IsNullOrWhiteSpace(RepositoryPath))
+			if (string.IsNullOrWhiteSpace(_account.RepositoryPath))
 				return;
 
-			var filePath = Path.Combine(RepositoryPath, @".git\config");
+			var filePath = Path.Combine(_account.RepositoryPath, @".git\config");
 			if (File.Exists(filePath) == false)
 				return;
 
@@ -83,11 +95,11 @@ namespace Run00.GitWorkItems.Controls
 			if (uri == null)
 				return;
 
-			RepositoryUrl = uri;
+			_account.RepositoryUrl = uri;
 
 			var account = uri.AbsolutePath.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-			AccountName = account.First();
-			RepositoryName = account.Skip(1).First();
+			_account.AccountName = account.First();
+			_account.RepositoryName = account.Skip(1).First();
 		}
 
 		private Dictionary<string, Dictionary<string, string>> ReadIni(string filePath)
@@ -123,6 +135,7 @@ namespace Run00.GitWorkItems.Controls
 			//InIFile["WindowSettings"]["Window Name"];
 		}
 
+		private readonly Account _account;
 
 	}
 }

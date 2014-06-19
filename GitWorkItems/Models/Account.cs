@@ -12,6 +12,14 @@ namespace Run00.GitWorkItems.Models
 	[ImplementPropertyChanged]
 	public class Account
 	{
+		public string RepositoryPath { get; set; }
+
+		public Uri RepositoryUrl { get; set; }
+
+		public string AccountName { get; set; }
+
+		public string RepositoryName { get; set; }
+
 		public ICollection<Query> Queries { get; set; }
 
 		public ICollection<Query> Dashboards { get; set; }
@@ -22,23 +30,21 @@ namespace Run00.GitWorkItems.Models
 
 		public bool MissingQueries { get { return Queries.Count() == 0; } }
 
-		public Account([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
+		public Account()
 		{
-			_serviceProvider = serviceProvider;
-
-			Dashboards = new List<Query>() {
+			Dashboards = new List<Query>() 
+			{
 				new Query { Title = "Dashboard One" },
 				new Query { Title = "Dashboard Two" },
 				new Query { Title = "Dashboard Three" }
 			};
 
-			Queries = new List<Query>() {
+			Queries = new List<Query>() 
+			{
 				new Query { Title = "Query One" },
 				new Query { Title = "Query Two" },
 				new Query { Title = "Query Three" }
 			};
 		}
-
-		private readonly IServiceProvider _serviceProvider;
 	}
 }

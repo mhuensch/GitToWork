@@ -20,15 +20,11 @@ namespace Run00.GitWorkItems.Controls
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
 		
-
-
 		public bool IsVisible { get; set; }
 
 		public Image Image { get; set; }
 	
 		public string Text { get; set; }
-
-
 
 		[ImportingConstructor]
 		public ExplorerButton([Import(typeof(SVsServiceProvider))] IServiceProvider serviceProvider)
@@ -38,16 +34,13 @@ namespace Run00.GitWorkItems.Controls
 
 			_serviceProvider = serviceProvider;
 
-			var accountProvider = _serviceProvider.GetService<GitControlProxy>() as INotifyPropertyChanged;
-			if (accountProvider == null)
+			var gitProxy = _serviceProvider.GetService<GitControlProxy>();
+			if (gitProxy == null)
 				return;
 
-			accountProvider.PropertyChanged += OnAccountInformationChanged;
+			gitProxy.AccountInformationChanged += OnGitProxyChanged;
 		}
 		
-
-
-
 		void ITeamExplorerNavigationItem.Execute()
 		{
 			var teamExplorer = _serviceProvider.GetService<ITeamExplorer>();
@@ -64,19 +57,14 @@ namespace Run00.GitWorkItems.Controls
 		void IDisposable.Dispose()
 		{
 		}
-		
 
-
-
-		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
+		private void OnGitProxyChanged(object sender, EventArgs e)
 		{
-			var accountProvider = sender as GitControlProxy;
-			if (accountProvider == null)
+			var gitProxy = sender as GitControlProxy;
+			if (gitProxy == null)
 				return;
 
-			IsVisible = 
-				string.IsNullOrWhiteSpace(accountProvider.AccountName) == false &&
-				string.IsNullOrWhiteSpace(accountProvider.RepositoryName) == false;
+			IsVisible = gitProxy.IsConnected();
 		}
 
 		private readonly IServiceProvider _serviceProvider;

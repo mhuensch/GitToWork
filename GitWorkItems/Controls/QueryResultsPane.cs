@@ -26,8 +26,7 @@ namespace Run00.GitWorkItems.Controls
 		/// <summary>
 		/// Standard constructor for the tool window.
 		/// </summary>
-		public QueryResultsPane()
-			: base(null)
+		public QueryResultsPane() : base(null)
 		{
 			// Set the window title reading it from the resources.
 			this.Caption = Resources.ToolWindowTitle;

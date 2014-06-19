@@ -40,7 +40,6 @@ namespace Run00.GitWorkItems
 	[ProvideToolWindow(typeof(NewItemPane))]
 	[ProvideToolWindow(typeof(NewQueryPane))]
 	// Registering provider services to be located by this package.
-	[ProvideService(typeof(Account))]
 	[ProvideService(typeof(GitControlProxy))]	
 	[Guid(GuidList.GitWorkItemsPkgStringId)]
 	public sealed class GitWorkItemsPackage : Package
@@ -57,7 +56,6 @@ namespace Run00.GitWorkItems
 			Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
 
 			var serviceContainer = (IServiceContainer)this;
-			serviceContainer.AddService(typeof(Account), new ServiceCreatorCallback((c, s) => { return new Account(this); }), true);
 			serviceContainer.AddService(typeof(GitControlProxy), new ServiceCreatorCallback((c, s) => { return new GitControlProxy(this); }), true);
 		}
 	}
