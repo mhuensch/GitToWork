@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitWorkItems", "GitWorkItems\GitWorkItems.csproj", "{A38492D0-27AD-4687-91F8-D644B67A5085}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitWorkItems_IntegrationTests", "GitWorkItems\GitWorkItems_IntegrationTests\GitWorkItems_IntegrationTests.csproj", "{E32DC728-8CDB-441B-884E-54A072FDB0AD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41B26D72-596A-41F0-8D34-C7AFE55C3A4F}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		UnitTests.testsettings = UnitTests.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitWorkItems_UnitTests", "GitWorkItems\GitWorkItems_UnitTests\GitWorkItems_UnitTests.csproj", "{1948E37B-C5AE-42B6-B63E-8A03564AC569}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitWorkItems_IntegrationTests", "GitWorkItems_IntegrationTests\GitWorkItems_IntegrationTests.csproj", "{E32DC728-8CDB-441B-884E-54A072FDB0AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitWorkItems_UnitTests", "GitWorkItems_UnitTests\GitWorkItems_UnitTests.csproj", "{1948E37B-C5AE-42B6-B63E-8A03564AC569}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
