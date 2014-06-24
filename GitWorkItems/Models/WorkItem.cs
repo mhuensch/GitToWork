@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -12,13 +13,13 @@ namespace Run00.GitWorkItems.Models
 		public string Description { get; set; }
 		public string AssignedTo { get; set; }
 		public string Milestone { get; set; }
-		public ICollection<string> Tags { get; set; }
+		public ObservableCollection<string> Tags { get; set; }
 		public bool Unread { get; set; }
 
 		public WorkItem()
 		{
 			Title = "New Work Item";
-			Tags = new List<string>();
+			Tags = new ObservableCollection<string>();
 		}
 	}
 }

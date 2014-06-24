@@ -31,7 +31,6 @@ namespace Run00.GitWorkItems.Controls
 
 			_serviceProvider = e.ServiceProvider;
 			_gitProxy = _serviceProvider.GetService<GitControlProxy>();
-			_gitProxy.AccountNotifier.PropertyChanged += OnAccountInformationChanged;
 
 			_account = _gitProxy.Account;
 
@@ -71,23 +70,6 @@ namespace Run00.GitWorkItems.Controls
 		{
 		}
 
-		private void OnAccountInformationChanged(object sender, PropertyChangedEventArgs e)
-		{
-			switch(e.PropertyName)
-			{
-				case "SelectedQuery":
-					_serviceProvider.OpenNewTabWindow(GuidList.QueryResultsPaneId, _account.SelectedQuery);
-					break;
-				default:
-					return;
-			}
-		}
-
-		void AddItem(object item)
-		{
-			_account.SelectedQuery.WorkItems.Add(new Models.WorkItem() { Title = "Blaha" });
-		}
-
 		private void OnNewWorkItemClicked(object sender, EventArgs e)
 		{
 			_serviceProvider.OpenNewTabWindow(GuidList.NewItemPaneId, new Models.WorkItem());
@@ -110,11 +92,7 @@ namespace Run00.GitWorkItems.Controls
 
 		private void OnQuerySelected(object sender, EventArgs e)
 		{
-			var query = sender as Query;
-			if (query == null)
-				return;
-
-			_account.SelectedQuery = query;
+			_serviceProvider.OpenNewTabWindow(GuidList.QueryResultsPaneId, (IModel)sender);
 		}
 
 		private Account _account;

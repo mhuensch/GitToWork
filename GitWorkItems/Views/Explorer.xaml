@@ -67,8 +67,9 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 
-		<Separator Foreground="Gray" Margin="0, 24, 0, 24"/>
+		<Separator Foreground="Gray" Margin="0, 24, 0, 0"/>
 
+		<Label FontSize="18">Queries</Label>
 		<ListBox ItemsSource="{Binding Queries}" BorderBrush="Transparent" >
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
@@ -78,7 +79,7 @@
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="{Binding Path=Title}" />
+						<TextBlock Text="{Binding Path=Title}" Margin="10, 0, 0, 0" />
 						<StackPanel.ContextMenu>
 							<ContextMenu Background="LightGray">
 								<MenuItem Header="Add to Dashboard" Click="DeleteEvent" DataContext="{Binding}" />
@@ -93,7 +94,6 @@
 		</ListBox>
 
 		<StackPanel  Visibility="{Binding MissingQueries, Converter={StaticResource BooleanToVisibilityConverter}}">
-			<Label FontSize="18">Queries</Label>
 			<TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="10, 0, 10, 0" >
 				<Span Foreground="Black">No Queries Found.</Span>
 				<Hyperlink Name="CreateQueryLink" NavigateUri="Create">Create</Hyperlink> a query to search for work items.  These queries can be private or shared with other people on your team.

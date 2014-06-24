@@ -5,14 +5,85 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-	
-	<ListBox ItemsSource="{Binding WorkItems}" Background="Beige" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-		<ListBox.ItemTemplate>
-			<DataTemplate>
-				<Label Content="{Binding Title}"></Label>
-			</DataTemplate>
-		</ListBox.ItemTemplate>
-	</ListBox>
+
+	<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+		<StackPanel Orientation="Vertical">
+			<StackPanel Orientation="Horizontal" Height="40">
+				<Image Name="Refresh" Margin="5" />
+				<Image Name="Edit" Margin="5" />
+			</StackPanel>
+			<Grid Name="Editor" Margin="10">
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="75"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+
+
+				<Label Grid.Column="0" Grid.Row="0" Margin="0, 5, 0, 5">State:</Label>
+				<ComboBox SelectedValue="{Binding Path=State}" Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="0" Margin="0, 5, 0, 5" >
+					<ComboBoxItem>Created</ComboBoxItem>
+					<ComboBoxItem>Updated</ComboBoxItem>
+				</ComboBox>
+
+				<Label Grid.Column="0" Grid.Row="1" Margin="0, 5, 0, 5">Assignee:</Label>
+				<TextBox Text="{Binding Assignee}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" Margin="0, 5, 0, 5" Padding="5,0,0,0" FontSize="16"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="2" Margin="0, 5, 0, 5">Creator:</Label>
+				<TextBox  Text="{Binding Creator}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Margin="0, 5, 0, 5"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="3" Margin="0, 5, 0, 5">Mentioning:</Label>
+				<TextBox  Text="{Binding Mentioning}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" Margin="0, 5, 0, 5"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="4" Margin="0, 5, 0, 5">Milestone:</Label>
+				<TextBox  Text="{Binding Milestone}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="4" Margin="0, 5, 0, 5"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="5" Margin="0, 5, 0, 5">Labeled With:</Label>
+				<TextBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="5" Margin="0, 5, 0, 5"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="6" Margin="0, 5, 0, 5">Since:</Label>
+				<TextBox  Text="{Binding Since}" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="6" Margin="0, 5, 0, 5"></TextBox>
+
+				<Label Grid.Column="0" Grid.Row="7" Margin="0, 5, 0, 5">Subscribed:</Label>
+				<CheckBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="7" Margin="0, 17, 0, 10"></CheckBox>
+
+				<Label Grid.Column="0" Grid.Row="8" Margin="0, 5, 0, 5">Sort by:</Label>
+				<ComboBox SelectedValue="{Binding SortBy}" Grid.Column="1" Grid.Row="8" Margin="0, 5, 0, 5">
+					<ComboBoxItem>Comments</ComboBoxItem>
+					<ComboBoxItem>Created</ComboBoxItem>
+					<ComboBoxItem>Updated</ComboBoxItem>
+				</ComboBox>
+				<Label Grid.Column="2" Grid.Row="8" Grid.ColumnSpan="2" Margin="0, 5, 0, 5">Direction:</Label>
+				<ComboBox SelectedValue="{Binding Direction}" Grid.Column="3" Grid.Row="8" Margin="0, 5, 0, 5">
+					<ComboBoxItem>Ascending</ComboBoxItem>
+					<ComboBoxItem>Descending</ComboBoxItem>
+				</ComboBox>
+
+			</Grid>
+			<ListBox Name="Results" ItemsSource="{Binding WorkItems}" VerticalAlignment="Stretch" >
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Label Content="{Binding Title}"></Label>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+	</ScrollViewer>
+
 	<!--<StackPanel>
 		<TextBox >Title</TextBox>
 		<Grid>

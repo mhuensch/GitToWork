@@ -34,6 +34,11 @@ namespace Run00.GitWorkItems.Controls
 			Account = new Account();
 		}
 
+		public void UpdateQuery(Query query)
+		{
+			query.WorkItems.Add(new WorkItem() { Title = "blah" });
+		}
+
 		private void OnTeamExplorerManagerViewModelChanged(object sender, PropertyChangedEventArgs e)
 		{
 			var statusSercice = sender

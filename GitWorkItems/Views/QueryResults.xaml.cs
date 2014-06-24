@@ -23,6 +23,8 @@ namespace Run00.GitWorkItems.Views
 		public QueryResults()
 		{
 			InitializeComponent();
+			Refresh.Source = "\uf021".ToFontAwesomeIcon();
+			Edit.Source = "\uf044".ToFontAwesomeIcon();
 		}
 	}
 }

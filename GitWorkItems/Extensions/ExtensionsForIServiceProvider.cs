@@ -32,8 +32,13 @@ namespace Run00.GitWorkItems
 			if (shell.FindToolWindowEx(0x80000, ref guid, id, out winFrame) < 0 || winFrame == null)
 				return;
 
-			winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_FrameMode, VSFRAMEMODE.VSFM_MdiChild);
 			winFrame.SetProperty((int)__VSFPROPID.VSFPROPID_Caption, model.Title);
+
+			object obj;
+			winFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out obj);
+
+			if (obj is IModelControl)
+				((IModelControl)obj).InitalizeModel(model);
 
 			winFrame.Show();
 		}

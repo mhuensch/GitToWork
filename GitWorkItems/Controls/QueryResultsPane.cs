@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Run00.GitWorkItems.Views;
 using Run00.GitWorkItems.Models;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace Run00.GitWorkItems.Controls
 {
@@ -23,12 +24,8 @@ namespace Run00.GitWorkItems.Controls
 	/// implementation of the IVsUIElementPane interface.
 	/// </summary>
 	[Guid(GuidList.QueryResultsPaneId)]
-	public class QueryResultsPane : ToolWindowPane
+	public class QueryResultsPane : ToolWindowPane, IModelControl
 	{
-		//public Query Query { get; private set; }
-
-		//public INotifyPropertyChanged QueryNotifier { get { return (INotifyPropertyChanged)Query; } }
-
 		/// <summary>
 		/// Standard constructor for the tool window.
 		/// </summary>
@@ -50,26 +47,56 @@ namespace Run00.GitWorkItems.Controls
 			// the object returned by the Content property.
 			_view = new QueryResults();
 			_preview = new WorkItemEditor();
+			_view.Refresh.MouseLeftButtonUp += OnRefreshLeftMouseButtonUp;
+			_view.Edit.MouseLeftButtonUp += OnEditClicked;
+			_view.Results.MouseDoubleClick += OnListItemDoubleClick;
 			base.Content = _view;
 		}
 
-		protected override void Initialize()
+		public void InitalizeModel(object model)
 		{
-			base.Initialize();
-			var query = this.GetService<GitControlProxy>().Account.SelectedQuery;
-			((INotifyPropertyChanged)query).PropertyChanged += OnQueryChanged;
-			_view.DataContext = query;
+			this.Caption.ToString();
+			_view.DataContext = model;
 		}
 
-		void OnQueryChanged(object sender, PropertyChangedEventArgs e)
+		private void OnListItemDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			_view.InvalidateVisual();
+			var uiSender = sender as UIElement;
+			if (uiSender == null)
+				return;
+
+			var item = uiSender.GetSelectedElement<ListBoxItem>(e);
+			if (item == null)
+				return;
+
+			var workItem = item.Content as Models.WorkItem;
+			if (workItem == null)
+				return;
+
+			this.OpenNewTabWindow(GuidList.NewItemPaneId, workItem);
 		}
 
+		private void OnEditClicked(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			if (_view.Editor.Visibility == Visibility.Visible)
+				_view.Editor.Visibility = Visibility.Collapsed;
+			else
+				_view.Editor.Visibility = Visibility.Visible;
+		}
+
+		private void OnRefreshLeftMouseButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			var proxy = this.GetService<GitControlProxy>();
+			var query = _view.DataContext as Query;
+			if (query == null)
+				return;
+
+			proxy.UpdateQuery(query);
+		}
 
 		private void listItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			((IServiceProvider)this).OpenNewTabWindow(GuidList.NewItemPaneId, new Models.WorkItem());
+			this.OpenNewTabWindow(GuidList.NewItemPaneId, new Models.WorkItem());
 		}
 
 		private void listItem_Selected(object sender, RoutedEventArgs e)
