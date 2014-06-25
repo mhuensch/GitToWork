@@ -19,7 +19,9 @@ namespace Run00.GitWorkItems.Models
 		
 		public int UnreadCount { get; set; }
 
-		public string State { get; set; }
+		public State SelectedState { get; set; }
+
+		public ObservableCollection<State> States {get; set;}
 
 		public string Assignee { get; set; }
 
@@ -41,9 +43,17 @@ namespace Run00.GitWorkItems.Models
 
 		public Query()
 		{
-			Title = "New Query";
 			Labels = new ObservableCollection<string>();
 			WorkItems = new ObservableCollection<WorkItem>();
+			States = new ObservableCollection<State>()
+			{
+				new State() { Name = "[Any]", Value=null }
+			};
+
+			Title = "New Query";
+			SelectedState = States.First();
+			SortBy = "[Default]";
+			Direction = "[Default]";
 		}
 	}
 }

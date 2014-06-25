@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="Controls\IModelControl.cs" />
     <Compile Include="Controls\NewQueryPane.cs" />
+    <Compile Include="Controls\OptionToNullConverter.cs" />
     <Compile Include="Controls\QueryListPane.cs" />
     <Compile Include="Extensions\ExtensionsForUiElement.cs" />
     <Compile Include="Extensions\ExtensionsForIServiceProvider.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Guids.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\State.cs" />
     <Compile Include="Models\WorkItem.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

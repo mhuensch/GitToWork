@@ -44,22 +44,18 @@ namespace Run00.GitWorkItems.Models
 
 		public Account()
 		{
+			Dashboards = new ObservableCollection<Query>();
+			Queries = new ObservableCollection<Query>();
+
 			if (Debugger.IsAttached)
 			{
-				MessageBox.Show("ha!");
-			}
-			Dashboards = new ObservableCollection<Query>() 
-			{
-				new Query { Id = Guid.NewGuid(), Title = "Dashboard One", Total = 5, UnreadCount = 2, WorkItems = new ObservableCollection<WorkItem> { new WorkItem() { Title = "mine" } }},
-				new Query { Id = Guid.NewGuid(), Title = "Dashboard Two", Total = 5, UnreadCount = 2 },
-				new Query { Id = Guid.NewGuid(), Title = "Dashboard Three", Total = 5, UnreadCount = 2 }
-			};
+				Dashboards.Add(new Query { Id = Guid.NewGuid(), Title = "Dashboard One", Total = 5, UnreadCount = 2, WorkItems = new ObservableCollection<WorkItem> { new WorkItem() { Title = "mine" } }});
+				Dashboards.Add(new Query { Id = Guid.NewGuid(), Title = "Dashboard Two", Total = 5, UnreadCount = 2 });
+				Dashboards.Add(new Query { Id = Guid.NewGuid(), Title = "Dashboard Three", Total = 5, UnreadCount = 2 });
 
-			Queries = new ObservableCollection<Query>() 
-			{
-				new Query { Id = Guid.NewGuid(), Title = "Query One", Total = 5, UnreadCount = 2, Assignee="Michael", State="Created", SortBy="Comments" },
-				new Query { Id = Guid.NewGuid(), Title = "Query Two", Total = 5, UnreadCount = 2 },
-				new Query { Id = Guid.NewGuid(), Title = "Query Three", Total = 5, UnreadCount = 2 }
+				Queries.Add(new Query { Id = Guid.NewGuid(), Title = "Query One", Total = 5, UnreadCount = 2, Assignee="Michael", SortBy="Comments" });
+				Queries.Add(new Query { Id = Guid.NewGuid(), Title = "Query Two", Total = 5, UnreadCount = 2 });
+				Queries.Add(new Query { Id = Guid.NewGuid(), Title = "Query Three", Total = 5, UnreadCount = 2 });
 			};
 		}
 
